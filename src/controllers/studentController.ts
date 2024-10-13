@@ -9,7 +9,7 @@ export const register = async (req: Request, res: Response) => {
         const newStudent = await createStudent({
           username, email, password, className,role});
         if(newStudent){
-            res.status(201).json({message: `${newTeacher.username} You have successfully registered`});
+            res.status(201).json({message: `${newStudent.username} You have successfully registered`});
         }
         res.status(500).json({message: "user no provied!"});
         return;

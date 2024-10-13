@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 // import studentRouter from "./routes/studentRoutes";
 import teacherRouter from "./routes/teacherRoutes";
+import studentRouter from "./routes/studentRoutes";
 import { errorHandler } from "./middleware/errorHandler";
 import connectDB from "./config/db";
 
@@ -19,7 +20,7 @@ app.use(express.json());
 connectDB();
 
 // Routes
-// app.use("/api/students", postRouter);
+app.use("/api/students", studentRouter);
 app.use("/api/teachers", teacherRouter);
 
 

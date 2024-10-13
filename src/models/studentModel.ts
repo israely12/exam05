@@ -7,7 +7,7 @@ export interface IStudent extends Document {
   username: string;
   email: string;
   password: string;
-  class: string;
+  className: string;
   role: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -33,7 +33,7 @@ const StudentSchema = new Schema<IStudent>({
     },
   },
   password: { type: String, required: [true, "Password is Required!"] },
-  class: { type: String, required: [true, "Class is Required!"] },
+  className: { type: String, required: [true, "Class is Required!"] },
   role: { type: String, required: [true, "Role is Required!"] },
 });
   
