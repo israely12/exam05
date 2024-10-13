@@ -5,7 +5,7 @@ import { generateToken } from "../utils/auth";
 
 export const createStudent = async (studentData: Partial<IStudent>): Promise<IStudent> => {    
         const student = new studentModel(
-        studentData
+        studentData,
   );
   //find the cllas to add the student
   const newClass = await classModel.findOneAndUpdate(
@@ -35,8 +35,17 @@ export const loginStudent = async (email:string , password:string): Promise<stri
     await user.save();
     
     // יצירת טוקן עבור המשתמש
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.role);
   
     // שליחת הטוקן בתגובה
      return token;
   }
+
+  export const getAllStudents = async (): Promise<IStudent[]> => {
+    const AllStudents = await studentModel.find().select(
+       '-password'
+      )
+      .lean();
+      
+      return AllStudents;
+};

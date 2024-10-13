@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import teacherModel, { ITeacher } from "../models/teacherModel";
-import { createTeacher ,loginTeacher} from "../servises/teacherService";
+import { createTeacher ,loginTeacher,addGradeToStudent} from "../servises/teacherService";
+import { AuthRequest } from "../middleware/authMiddleware";
 import { generateToken } from "../utils/auth";
+import { log } from "console";
 
 
 export const register = async (req: Request, res: Response) => {
@@ -11,7 +13,7 @@ export const register = async (req: Request, res: Response) => {
   }
     const {username, email, password, className ,role} = req.body;
     try {
-      console.log({className});
+
         const newTeacher = await createTeacher({
           username, email, password, className,role});
         if(newTeacher){
@@ -38,10 +40,10 @@ export const login = async (req: Request, res: Response) => {
     if (token) {
       // אם ההתחברות הצליחה והמשתמש קיבל טוקן
       res.cookie('authToken', token, {
-        httpOnly: true,  // רק השרת יכול לגשת לקוקי (לא JS בצד לקוח)
-        secure: true,    // רק חיבורי HTTPS (בפיתוח אפשר להוריד את זה)
-        maxAge: 4 * 60 * 60 * 1000, // תוקף של 4 שעות (במילישניות)
-        sameSite: 'strict' // למניעת CSRF (Cross-Site Request Forgery)
+        httpOnly: true,  
+        secure: true,    
+        maxAge: 4 * 60 * 60 * 1000,
+        sameSite: 'strict'
       });
       
       // שליחת תגובה עם סטטוס 201 וטוקן
@@ -56,3 +58,34 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: "An error occurred during login." });
   }
 };
+
+export const addGrade = async (req: AuthRequest, res: Response):Promise <void> => {
+  const studentId = req.params.id;
+  console.log("req.params", req.params);
+  
+  const  { subject }  = req.body; 
+  const teacherId = req.user?.userId; 
+
+  if (!teacherId) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+  }
+
+  try {
+    const updatestudentGreades = await addGradeToStudent(studentId, subject);
+    console.log(updatestudentGreades);
+    
+
+    if (!updatestudentGreades) {
+       res.status(404).json({ message: 'student not found' });
+       return;
+    }
+
+      res.status(200).json(updatestudentGreades);
+
+  } catch (error) {    
+    // טיפול בשגיאות כלליות אחרות
+      res.status(500).json({ message: 'Error adding comment', error });
+  }
+};
+

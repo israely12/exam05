@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Student, { IStudent } from "../models/studentModel";
-import { createStudent,loginStudent} from "../servises/studentServise";
+import { createStudent,loginStudent,getAllStudents} from "../servises/studentServise";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 
 export const register = async (req: Request, res: Response) => {
@@ -49,5 +50,31 @@ export const login = async (req: Request, res: Response) => {
       console.error("Login error:", error);
       res.status(500).json({ message: "An error occurred during login." });
     }
+  };
+  
+  export const getStudents = async (req: AuthRequest,res: Response) => {
+    const teacherId = req.user?.userId; 
+    if (!teacherId) {
+        res.status(401).json({ message: 'User not authenticated' });
+        return;
+    }
+    try {
+  
+      const students = await getAllStudents();
+      console.log(students);
+      
+      if (!students) {
+        res.status(404).json({ messege: "students not found" });
+      }
+      res.status(201).json(students);
+  
+      
+    } catch (error) {
+        console.log(error);
+        
+      res.status(500).json({ messege: "server error" });
+      
+    }
+   
   };
   

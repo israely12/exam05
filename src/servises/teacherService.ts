@@ -1,10 +1,10 @@
 import teacherModel, { ITeacher } from "../models/teacherModel";
+import studentModel, { IStudent, IGrade } from "../models/studentModel";
 import classModel, { IClass } from "../models/classModel";
 import { generateToken } from "../utils/auth";
 
 
 export const createTeacher = async (teacherData: Partial<ITeacher>): Promise<ITeacher> => {    
-    console.log({teacherData});
         
     const teacher = new teacherModel(
         teacherData
@@ -34,9 +34,25 @@ export const loginTeacher = async (email:string , password:string): Promise<stri
     await user.save();
     
     // יצירת טוקן עבור המשתמש
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.role);
   
     // שליחת הטוקן בתגובה
      return token;
   }
+  
+  export const addGradeToStudent = async (studentId: string, subject: string): Promise<IStudent | null> => {    
+    const grade: IGrade = {
+      subject: subject,
+      grade: 0,
+    };
+    
+    const updatedGrades = await studentModel.findByIdAndUpdate(
+      studentId,
+      { $push: { grades: grade } }, 
+      { new: true } 
+    )
+
+     await updatedGrades?.save();
+    return updatedGrades;
+  };
   

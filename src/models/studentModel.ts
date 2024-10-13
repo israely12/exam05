@@ -2,13 +2,23 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 
+export interface IGrade {
+    
+    subject: string;
+    grade: number;  
+}
 
+const GradeSchema = new Schema<IGrade>({
+    subject: { type: String, required: [true, "Subject is required"], minlength: [3, "Subject must be at least 3 characters long"], maxlength: [30, "Subject cannot exceed 30 characters"] },
+    grade: { type: Number, required: [true, "Grade is required"], min: [0, "Grade must be at least 0"], max: [100, "Grade cannot exceed 100"] },
+})
 export interface IStudent extends Document {
   username: string;
   email: string;
   password: string;
   className: string;
   role: string;
+  grades: IGrade[];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -35,6 +45,7 @@ const StudentSchema = new Schema<IStudent>({
   password: { type: String, required: [true, "Password is Required!"] },
   className: { type: String, required: [true, "Class is Required!"] },
   role: { type: String, required: [true, "Role is Required!"] },
+  grades: [GradeSchema]
 });
   
 StudentSchema.pre<IStudent>("save", async function (next) {

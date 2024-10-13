@@ -1,8 +1,10 @@
+import { log } from "console";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
- export interface AuthRequest extends Request {
-    user?: { userId: string; userRole: string };}
+export interface AuthRequest extends Request {
+  user?: { userId: string; userRole: string };
+}
 
 export const authMiddleware = (
   req: AuthRequest,
@@ -22,23 +24,22 @@ export const authMiddleware = (
       userRole: string;
     };
     req.user = decoded;
-    
+
     next();
   } catch (error) {
     res.status(401).json({ message: "הטוקן אינו תקף" });
   }
 };
 
-
-export const managerAuthMiddleware = (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-  ) => {
-    if (req.user?.userRole !== "teacher") {
-      res.status(403).json({ message: "Access denied. teacher role required." });
-    } else {
-      next();
-    }
-  };
-  
+export const teacherAuthMiddleware = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+    
+  if (req.user?.userRole !== "teacher") {
+    res.status(403).json({ message: "Access denied. teacher role required." });
+  } else {
+    next();
+  }
+};
