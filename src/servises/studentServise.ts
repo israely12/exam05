@@ -7,9 +7,36 @@ export const createStudent = async (studentData: Partial<IStudent>): Promise<ISt
         const student = new studentModel(
         studentData
   );
-  const classToAdd = await classModel.find(name:studentData.className);
-  
+  //find the cllas to add the student
+  const newClass = await classModel.findOneAndUpdate(
+    { className: studentData.className },
+    { $push: { students: student._id } },
+    { new: true }
+  );
+  if (!newClass) {
+    throw new Error("Class not found");
+  }
+  await newClass.save();
+
   
     return await student.save();
 };
   
+export const loginStudent = async (email:string , password:string): Promise<string> => {
+
+    const user = await studentModel.findOne({email});
+  
+    // בדיקה אם המשתמש קיים והסיסמה נכונה
+    if (!user || !(await user.comparePassword(password))) {
+      // אם הפרטים לא תקינים, שליחת תגובת שגיאה
+      throw new Error("Incorrect username or password");
+         
+    }
+    await user.save();
+    
+    // יצירת טוקן עבור המשתמש
+    const token = generateToken(user.id);
+  
+    // שליחת הטוקן בתגובה
+     return token;
+  }

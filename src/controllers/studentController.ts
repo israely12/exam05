@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Student, { IStudent } from "../models/studentModel";
-import { createStudent} from "../servises/studentServise";
+import { createStudent,loginStudent} from "../servises/studentServise";
 
 
 export const register = async (req: Request, res: Response) => {
@@ -21,3 +21,33 @@ export const register = async (req: Request, res: Response) => {
         
       }  
 }
+
+export const login = async (req: Request, res: Response) => {
+    // חילוץ שם משתמש וסיסמה מגוף הבקשה
+    const { email, password } = req.body;
+  
+    try {
+      const token = await loginStudent(email, password);
+      
+      if (token) {
+        // אם ההתחברות הצליחה והמשתמש קיבל טוקן
+        res.cookie('authToken', token, {
+          httpOnly: true,  // רק השרת יכול לגשת לקוקי (לא JS בצד לקוח)
+          secure: true,    // רק חיבורי HTTPS (בפיתוח אפשר להוריד את זה)
+          maxAge: 4 * 60 * 60 * 1000, // תוקף של 4 שעות (במילישניות)
+          sameSite: 'strict' // למניעת CSRF (Cross-Site Request Forgery)
+        });
+        
+        // שליחת תגובה עם סטטוס 201 וטוקן
+        res.status(201).json({ token });
+      } else {
+        // אם ההתחברות לא הצליחה ואין טוקן
+        res.status(400).json({ message: "Login failed. Invalid username or password." });
+      }
+    } catch (error) {
+      // טיפול בשגיאה אם משהו השתבש בשרת
+      console.error("Login error:", error);
+      res.status(500).json({ message: "An error occurred during login." });
+    }
+  };
+  
