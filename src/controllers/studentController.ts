@@ -6,6 +6,8 @@ import { AuthRequest } from "../middleware/authMiddleware";
 
 export const register = async (req: Request, res: Response) => {
     const {username, email, password, className, role} = req.body;
+    console.log(req.body);
+    
     try {
         const newStudent = await createStudent({
           username, email, password, className,role});
@@ -33,10 +35,10 @@ export const login = async (req: Request, res: Response) => {
       if (token) {
         // אם ההתחברות הצליחה והמשתמש קיבל טוקן
         res.cookie('authToken', token, {
-          httpOnly: true,  // רק השרת יכול לגשת לקוקי (לא JS בצד לקוח)
-          secure: true,    // רק חיבורי HTTPS (בפיתוח אפשר להוריד את זה)
-          maxAge: 4 * 60 * 60 * 1000, // תוקף של 4 שעות (במילישניות)
-          sameSite: 'strict' // למניעת CSRF (Cross-Site Request Forgery)
+          httpOnly: true,  
+          secure: true,    
+          maxAge: 4 * 60 * 60 * 1000, 
+          sameSite: 'strict'  
         });
         
         // שליחת תגובה עם סטטוס 201 וטוקן

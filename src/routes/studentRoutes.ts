@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { authMiddleware,teacherAuthMiddleware } from "../middleware/authMiddleware";
-const studentRouter = Router();
 import { register,login,getStudents} from "../controllers/studentController";
 import { get } from "http";
 
-studentRouter.get("/",authMiddleware,teacherAuthMiddleware,getStudents );
+const studentRouter = Router();
 
 studentRouter.post("/register", register);
+
+studentRouter.get("/",authMiddleware,teacherAuthMiddleware,getStudents );
+// studentRouter.put("/id:/changeGrade",authMiddleware,teacherAuthMiddleware, changeGrade);
 studentRouter.post("/login",login);
 studentRouter.get("/:username", );
 

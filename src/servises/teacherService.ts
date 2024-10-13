@@ -40,15 +40,17 @@ export const loginTeacher = async (email:string , password:string): Promise<stri
      return token;
   }
   
-  export const addGradeToStudent = async (studentId: string, subject: string): Promise<IStudent | null> => {    
-    const grade: IGrade = {
-      subject: subject,
-      grade: 0,
-    };
+  export const addGradeToStudent = async (studentId: string, gradeObj :IGrade, teacherId: string): Promise<IStudent | null> => {    
+
     
+    const teacher = await teacherModel.findById(teacherId);
+    const student = await studentModel.findById(studentId);
+    if (teacher?.className !== student?.className) {
+        throw new Error("Student and teacher are not in the same class");
+    }
     const updatedGrades = await studentModel.findByIdAndUpdate(
       studentId,
-      { $push: { grades: grade } }, 
+      { $push: { grades: gradeObj } }, 
       { new: true } 
     )
 

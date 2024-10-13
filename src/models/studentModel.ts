@@ -5,11 +5,13 @@ import bcrypt from "bcrypt";
 export interface IGrade {
     
     subject: string;
+    note: string;
     grade: number;  
 }
 
 const GradeSchema = new Schema<IGrade>({
-    subject: { type: String, required: [true, "Subject is required"], minlength: [3, "Subject must be at least 3 characters long"], maxlength: [30, "Subject cannot exceed 30 characters"] },
+    subject: { type: String, required: [true, "Subject is required"], minlength: [3, "Subject must be at least 3 characters long"], maxlength: [30, "Subject cannot exceed 30 characters"] ,unique: true},
+    note: { type: String, maxlength: [500, "Note cannot exceed 500 characters"] },
     grade: { type: Number, required: [true, "Grade is required"], min: [0, "Grade must be at least 0"], max: [100, "Grade cannot exceed 100"] },
 })
 export interface IStudent extends Document {

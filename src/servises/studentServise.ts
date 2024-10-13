@@ -4,9 +4,11 @@ import { generateToken } from "../utils/auth";
 
 
 export const createStudent = async (studentData: Partial<IStudent>): Promise<IStudent> => {    
-        const student = new studentModel(
+        const student = new studentModel({
         studentData,
-  );
+        grades: [],
+    
+});
   //find the cllas to add the student
   const newClass = await classModel.findOneAndUpdate(
     { className: studentData.className },
@@ -42,6 +44,7 @@ export const loginStudent = async (email:string , password:string): Promise<stri
   }
 
   export const getAllStudents = async (): Promise<IStudent[]> => {
+
     const AllStudents = await studentModel.find().select(
        '-password'
       )

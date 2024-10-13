@@ -60,10 +60,10 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const addGrade = async (req: AuthRequest, res: Response):Promise <void> => {
-  const studentId = req.params.id;
-  console.log("req.params", req.params);
+  const studentId = req.params.id;  
+  const { subject, note , grade }   = req.body; 
+  console.log(req.body);
   
-  const  { subject }  = req.body; 
   const teacherId = req.user?.userId; 
 
   if (!teacherId) {
@@ -72,9 +72,7 @@ export const addGrade = async (req: AuthRequest, res: Response):Promise <void> =
   }
 
   try {
-    const updatestudentGreades = await addGradeToStudent(studentId, subject);
-    console.log(updatestudentGreades);
-    
+    const updatestudentGreades = await addGradeToStudent(studentId, req.body, teacherId);    
 
     if (!updatestudentGreades) {
        res.status(404).json({ message: 'student not found' });
@@ -84,8 +82,10 @@ export const addGrade = async (req: AuthRequest, res: Response):Promise <void> =
       res.status(200).json(updatestudentGreades);
 
   } catch (error) {    
+    console.log(error);
+    
     // טיפול בשגיאות כלליות אחרות
-      res.status(500).json({ message: 'Error adding comment', error });
+      res.status(500).json({ message: 'Error adding grades', error });
   }
 };
 

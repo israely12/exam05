@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-// import studentRouter from "./routes/studentRoutes";
 import teacherRouter from "./routes/teacherRoutes";
 import studentRouter from "./routes/studentRoutes";
 import { errorHandler } from "./middleware/errorHandler";
@@ -14,8 +13,6 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
-// MongoDB Connection
-// const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/blog_platform";
 
 connectDB();
 
