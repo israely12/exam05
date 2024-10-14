@@ -10,9 +10,9 @@ export interface IGrade {
 }
 
 const GradeSchema = new Schema<IGrade>({
-    subject: { type: String, required: [true, "Subject is required"], minlength: [3, "Subject must be at least 3 characters long"], maxlength: [30, "Subject cannot exceed 30 characters"] ,unique: true},
+    subject: { type: String, required: [true, "Subject is required"] },
     note: { type: String, maxlength: [500, "Note cannot exceed 500 characters"] },
-    grade: { type: Number, required: [true, "Grade is required"], min: [0, "Grade must be at least 0"], max: [100, "Grade cannot exceed 100"] },
+    grade: { type: Number, required: [true, "Grade is required"] },
 })
 export interface IStudent extends Document {
   username: string;
@@ -27,11 +27,7 @@ export interface IStudent extends Document {
 const StudentSchema = new Schema<IStudent>({
   username: {
     type: String,
-    required: [true, "Teachername is required"],
-    unique: true,
-    minlength: [3, "Teachername must be at least 3 characters long"],
-    maxlength: [30, "Teacername cannot exceed 30 characters"],
-    match: [/^[a-zA-Z0-9_]+$/, "Teachername can only contain letters, numbers, and underscores"],
+    required: [true, "Studentname is required"],
   },
   email: {
     type: String,

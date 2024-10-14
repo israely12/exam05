@@ -6,6 +6,5 @@ const teacherRouter = Router();
 teacherRouter.post("/register", register);
 teacherRouter.post("/login",login);
 teacherRouter.post("/:id/addGrade",authMiddleware,teacherAuthMiddleware,addGrade);
-teacherRouter.get("/:username", );
 
 export default teacherRouter;

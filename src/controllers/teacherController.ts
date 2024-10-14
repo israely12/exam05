@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import teacherModel, { ITeacher } from "../models/teacherModel";
 import { createTeacher ,loginTeacher,addGradeToStudent} from "../servises/teacherService";
 import { AuthRequest } from "../middleware/authMiddleware";
-import { generateToken } from "../utils/auth";
-import { log } from "console";
-
 
 export const register = async (req: Request, res: Response) => {
   if(!req.body){

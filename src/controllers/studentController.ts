@@ -3,14 +3,13 @@ import Student, { IStudent } from "../models/studentModel";
 import { createStudent,loginStudent,getAllStudents} from "../servises/studentServise";
 import { AuthRequest } from "../middleware/authMiddleware";
 
-
+//פונקצייה להרשמת סטודנט
 export const register = async (req: Request, res: Response) => {
-    const {username, email, password, className, role} = req.body;
-    console.log(req.body);
-    
+    const {username, email, password, className, role} = req.body;  
+      
     try {
         const newStudent = await createStudent({
-          username, email, password, className,role});
+          username, email, password, className, role});
         if(newStudent){
             res.status(201).json({message: `${newStudent.username} You have successfully registered`});
         }
@@ -25,6 +24,7 @@ export const register = async (req: Request, res: Response) => {
       }  
 }
 
+//פונקצייה להתחברות סטודנט
 export const login = async (req: Request, res: Response) => {
     // חילוץ שם משתמש וסיסמה מגוף הבקשה
     const { email, password } = req.body;
@@ -54,6 +54,7 @@ export const login = async (req: Request, res: Response) => {
     }
   };
   
+  //פונקצייה לקבלת כל הסטודנטים
   export const getStudents = async (req: AuthRequest,res: Response) => {
     const teacherId = req.user?.userId; 
     if (!teacherId) {
@@ -77,6 +78,5 @@ export const login = async (req: Request, res: Response) => {
       res.status(500).json({ messege: "server error" });
       
     }
-   
-  };
+};
   

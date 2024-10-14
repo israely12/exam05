@@ -3,22 +3,22 @@ import classModel, { IClass } from "../models/classModel";
 import { generateToken } from "../utils/auth";
 
 
-export const createStudent = async (studentData: Partial<IStudent>): Promise<IStudent> => {    
+export const createStudent = async (studentData: Partial<IStudent>): Promise<IStudent> => {  
         const student = new studentModel({
-        studentData,
-        grades: [],
-    
+        ...studentData   
 });
+
+
   //find the cllas to add the student
-  const newClass = await classModel.findOneAndUpdate(
+  const findClass = await classModel.findOneAndUpdate(
     { className: studentData.className },
     { $push: { students: student._id } },
     { new: true }
   );
-  if (!newClass) {
+  if (!findClass) {
     throw new Error("Class not found");
   }
-  await newClass.save();
+  await findClass.save();
 
   
     return await student.save();

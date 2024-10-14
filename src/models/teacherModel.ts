@@ -2,7 +2,6 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 
-
 export interface ITeacher extends Document {
   username: string;
   email: string;
